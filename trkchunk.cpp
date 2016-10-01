@@ -108,33 +108,49 @@ TrkChunk::TrkChunk(QByteArray ba) {
                         // Note off
                         QByteArray tmp = data->left(2);
                         *data = data->right(data->length() - 2);
-
-                        u_int8_t msg_data1 = tmp.at(0);
-                        u_int8_t msg_data2 = tmp.at(1);
+                        events.append(new Event(delta, note_off, tmp));
                     }
                         break;
                     case 1: {
                         // Note on
+                        QByteArray tmp = data->left(2);
+                        *data = data->right(data->length() - 2);
+                        events.append(new Event(delta, note_on, tmp));
                     }
                         break;
                     case 2: {
                         // Polyphonic key pressure (Aftertouch)
+                        QByteArray tmp = data->left(2);
+                        *data = data->right(data->length() - 2);
+                        events.append(new Event(delta, poly_key, tmp));
                     }
                         break;
                     case 3: {
                         // Control change
+                        QByteArray tmp = data->left(2);
+                        *data = data->right(data->length() - 2);
+                        events.append(new Event(delta, cnt_change, tmp));
                     }
                         break;
                     case 4: {
                         // Program change
+                        QByteArray tmp = data->left(1);
+                        *data = data->right(data->length() - 1);
+                        events.append(new Event(delta, pgm_change, tmp));
                     }
                         break;
                     case 5: {
                         // Channel pressure (Aftertouch)
+                        QByteArray tmp = data->left(1);
+                        *data = data->right(data->length() - 1);
+                        events.append(new Event(delta, chan_press, tmp));
                     }
                         break;
                     case 6: {
                         // Pitch wheel change
+                        QByteArray tmp = data->left(2);
+                        *data = data->right(data->length() - 2);
+                        events.append(new Event(delta, pw_change, tmp));
                     }
                         break;
                     default:
