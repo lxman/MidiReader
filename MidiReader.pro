@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     ba16tobe.cpp \
     trkchunk.cpp \
     vlqscanner.cpp \
-    event.cpp
+    event.cpp \
+    track.cpp
 
 HEADERS  += mainwindow.h \
     headerchunk.h \
@@ -28,6 +29,7 @@ HEADERS  += mainwindow.h \
     trkchunk.h \
     globals.h \
     vlqscanner.h \
-    event.h
+    event.h \
+    track.h
 
 FORMS    += mainwindow.ui
