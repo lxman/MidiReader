@@ -8,6 +8,7 @@ class Track {
 public:
 	Track();
 	void AddEvent(u_int64_t delta, EventType et, QByteArray &ba);
+	QList<Event *> Events() { return events; }
 
 private:
 	QList<Event *> events;

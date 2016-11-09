@@ -13,20 +13,20 @@ class MainWindow;
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+	explicit MainWindow(QWidget *parent = 0);
+	~MainWindow();
 
 private slots:
-    void on_pbOpen_clicked();
+	void on_pbOpen_clicked();
 
 private:
-    Ui::MainWindow *ui;
-    QFile *currFile;
-    HeaderChunk *hdChunk;
-    QList<TrkChunk *> trkList;
+	Ui::MainWindow *ui;
+	QFile *currFile;
+	HeaderChunk *hdChunk;
+	QList<TrkChunk *> trkList;
 };
 
 #endif // MAINWINDOW_H

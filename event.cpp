@@ -1,11 +1,12 @@
 #include "event.h"
 #include <QtMath>
 #include "ba32tobe.h"
-#include <QDebug>
+#include "converter.h"
 
-Event::Event(u_int64_t delta, EventType t, QByteArray &ba) {
+Event::Event(u_int64_t nTicks, EventType t, QByteArray &ba) {
 	et = t;
-	delta_time = delta;
+	ticks = nTicks;
+	Converter cvt;
 	if(et == time_sig) {
 		t_sig.num = (uchar)ba.at(0);
 		t_sig.den = pow(2, (uchar)ba.at(1));
@@ -23,15 +24,23 @@ Event::Event(u_int64_t delta, EventType t, QByteArray &ba) {
 		tmp[3] = ba.at(2);
 		uSec_qn = BA32toBE(tmp).translated();
 	}
+	if((et == note_on) || (et == note_off) ||
+	   (et == poly_key)) {
+		QByteArray tmp = TranslateNote(ba.at(0));
+		nOctave = tmp.at(0);
+		nName = cvt.NoteToString(tmp.at(1));
+		velocity = ba.at(1);
+	}
 	if(ba.length() > 0) val1 = (uchar)ba.at(0);
 	if(ba.length() > 1) val2 = (uchar)ba.at(1);
-	qDebug() << "Delta time " << delta_time;
-	qDebug() << "Event type " << et;
-	if(ba.length() > 0) qDebug() << "Data 1 " << val1;
-	if(ba.length() > 1) qDebug() << "Data 2 " << val2;
-	qDebug() << "\n";
+}
 
-//	QByteArray *tmp = new QByteArray(ba.length());
-//	for(int index = 0; index < ba.length(); index++) tmp[index] = ba.at(index);
-//	data = tmp->data();
+QByteArray Event::TranslateNote(uchar data) {
+	QByteArray retValue = QByteArray(2, 0);
+	int8_t octave = data % 12;
+	data = data - ((data / 12) * 12);
+	octave -= 1;
+	retValue[0] = octave;
+	retValue[1] = data;
+	return retValue;
 }

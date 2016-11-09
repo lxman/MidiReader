@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QDebug>
 #include "ba32tobe.h"
+#include "generator.h"
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -22,6 +23,7 @@ void MainWindow::on_pbOpen_clicked()
 	if(fName == "") return;
 	currFile = new QFile(fName);
 	if(currFile->open(QFile::ReadOnly)) {
+		int currTrk = 0;
 		QByteArray *ba = new QByteArray(currFile->size(), '0');
 		*ba = currFile->readAll();
 		currFile->close();
@@ -33,11 +35,17 @@ void MainWindow::on_pbOpen_clicked()
 				if(nextHdr.left(4) == "MTrk") {
 					*ba = ba->right(ba->length() - 8);
 					int data_len = BA32toBE(nextHdr.right(4)).translated();
-					trkList.append(new TrkChunk(ba->left(data_len)));
+					trkList.append(new TrkChunk(currTrk++, ba->left(data_len)));
 					*ba = ba->right(ba->length() - data_len);
-					qDebug() << ba->length();
 				}
 			}
 		}
+		Generator *g = new Generator(trkList, hdChunk->division());
+//		foreach (TrkChunk *trkChunk, trkList) {
+//			foreach (Track *t, trkChunk->tracks) {
+//				qDebug() << "This track contains " << t->events.count() << " events";
+//			}
+//			qDebug() << "The track contains " << t->events.count() << " events";
+//		}
 	}
 }
